@@ -574,6 +574,168 @@ namespace Cake.SSRS.Tests.Unit
         }
 
         [Collection(Traits.CakeContextCollection)]
+        [Order(4)]
+        public sealed class TheUploadResourceMethod : TestClassBase
+        {
+            private readonly CakeContextFixture _Context;
+            private readonly SsrsConnectionSettings _Settings;
+
+            public TheUploadResourceMethod(CakeContextFixture fixture)
+            {
+                _Context = fixture;
+                _Settings = new SsrsConnectionSettings
+                {
+                    ServiceEndpoint = fixture.ServiceEndpoint,
+                    UseDefaultCredentials = true
+                };
+            }
+
+            [Fact]
+            public void Should_Throw_On_Null_Settings_Context()
+            {
+                //Given                
+                ICakeContext context = null;
+                SsrsConnectionSettings settings = _Settings;
+                FilePath filePath = "./App_Data/Resources/ok.png";
+                string folderPath = ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+
+                //When
+                var record = Record.Exception(() => SsrsAliases.SsrsUploadResource(context, filePath, folderPath, properties, settings));
+
+                //Then
+                CakeAssert.IsArgumentNullException(record, nameof(context));
+            }
+
+            [Fact]
+            public void Should_Throw_On_Null_SettingsConfigurator_Parameter()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                Action<SsrsConnectionSettings> settingsConfigurator = null;
+                FilePath filePath = "./App_Data/Resources/ok.png";
+                string folderPath = ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+
+                //When
+                var record = Record.Exception(() => SsrsAliases.SsrsUploadResource(context, filePath, folderPath, properties, settingsConfigurator));
+
+                //Then
+                CakeAssert.IsArgumentNullException(record, nameof(settingsConfigurator));
+            }
+
+            [Fact]
+            public void Should_Throw_On_Null_FilePath_Parameter()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                Action<SsrsConnectionSettings> settingsConfigurator = s => { };
+                FilePath filePath = null;
+                string folderPath = ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+
+                //When
+                var record = Record.Exception(() => SsrsAliases.SsrsUploadResource(context, filePath, folderPath, properties, settingsConfigurator));
+
+                //Then
+                CakeAssert.IsArgumentNullException(record, nameof(filePath));
+            }
+
+            [Fact]
+            public void Should_Throw_On_Null_FolderPath_Parameter()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                Action<SsrsConnectionSettings> settingsConfigurator = s => { };
+                FilePath filePath = "./App_Data/Resources/ok.png";
+                string folderPath = null;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+
+                //When
+                var record = Record.Exception(() => SsrsAliases.SsrsUploadResource(context, filePath, folderPath, properties, settingsConfigurator));
+
+                //Then
+                CakeAssert.IsArgumentNullException(record, nameof(folderPath));
+            }
+
+            [Fact]
+            public void Should_Throw_On_Null_Pattern_Parameter()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                string pattern = null;
+                string folderPath = ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+                SsrsConnectionSettings settings = _Settings;
+
+                //When
+                var record = Record.Exception(() => SsrsAliases.SsrsUploadResource(context, pattern, folderPath, properties, settings));
+
+                //Then
+                CakeAssert.IsArgumentNullException(record, nameof(pattern));
+            }
+
+            [Fact]
+            public void Should_Return_On_Empty_Collection_On_Not_Matching_Any_Files_For_Pattern()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                string pattern = "App_Data/Foobar/*.png";
+                string folderPath = ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for an Image"
+                };
+                SsrsConnectionSettings settings = _Settings;
+
+                //When
+                var records = SsrsAliases.SsrsUploadResource(context, pattern, folderPath, properties, settings);
+
+                //Then
+                Assert.NotNull(records);
+                Assert.Empty(records);
+            }
+
+            [Fact(Skip = "Integration Test Does not work on AppVeyor")]
+            [Order(4)]
+            [Trait(Traits.TestCategory, TestCategory.Integration)]
+            public void Should_Upload_Single_Report()
+            {
+                //Given                
+                ICakeContext context = _Context;
+                FilePath pattern = System.IO.Path.Combine(_Context.ResourcesDirectory, "ok.png");
+                string folderPath = "/" + ParentFolderPath;
+                IDictionary<string, string> properties = new Dictionary<string, string>()
+                {
+                    ["Description"] = "Great Description for a Image"
+                };
+                SsrsConnectionSettings settings = _Settings;
+
+                //When
+                var record = SsrsAliases.SsrsUploadResource(context, pattern, folderPath, properties, settings);
+
+                //Then
+                Assert.NotNull(record);
+                Assert.Equal("ok", record.Name, ignoreCase: true, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true);
+            }
+        }
+
+        [Collection(Traits.CakeContextCollection)]
         [Order(5)]
         public sealed class TheSsrsFindItemMethod : TestClassBase
         {

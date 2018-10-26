@@ -23,6 +23,7 @@ namespace Cake.SSRS.Tests.Fixtures
         public string ReportsDirectory { get; set; }
         public string DataSetsDirectory { get; set; }
         public string DataSourcesDirectory { get; set; }
+        public string ResourcesDirectory { get; set; }
 
         public bool IsRunningOnAppVeyor { get; private set; }
 
@@ -73,9 +74,15 @@ namespace Cake.SSRS.Tests.Fixtures
                 new FilePath("./App_Data/DataSources/AdventureWorks.rds")
             });
 
+            Globber.GetFiles(Arg.Is<string>("./App_Data/**/*.png")).Returns(new FilePath[]
+            {
+                new FilePath("./App_Data/Resources/ok.png")
+            });
+
             ReportsDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "App_Data", "Reports");
             DataSetsDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "App_Data", "DataSets");
             DataSourcesDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "App_Data", "DataSources");
+            ResourcesDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "App_Data", "Resources");
         }
 
         public void Dispose()

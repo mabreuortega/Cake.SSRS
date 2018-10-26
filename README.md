@@ -103,6 +103,24 @@ SsrsUploadDataSource("./path/to/datasource.rds", "/AdventureWorks",
     });
 ```
 
+### Upload a Resource
+
+```csharp
+SsrsUploadReport("./path/to/image.png", "/AdventureWorks",
+    new Dictionary<string, string>
+    {
+            ["Description"] = "Description for the Image"
+    },
+    new SsrsConnectionSettings
+    {
+        ServiceEndpoint = "http://localhost/reportserver/ReportService2010.asmx",
+        UseDefaultCredentials = true,
+		ProxyCredentialType = ProxyCredentialType.Ntlm,
+		ImperonsationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation,
+		SecurityMode = SecurityMode.TransportCredentialOnly
+    });
+```
+
 ### Search for an Item
 
 ```csharp

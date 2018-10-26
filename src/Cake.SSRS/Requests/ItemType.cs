@@ -21,6 +21,10 @@ namespace Cake.SSRS
         /// <summary>
         /// Shared DataSource (.rds) file
         /// </summary>
-        DataSource
+        DataSource,
+        /// <summary>
+        /// Resource (.png|.jpg|...) file
+        /// </summary>
+        Resource
     }
 }

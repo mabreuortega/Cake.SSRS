@@ -31,6 +31,7 @@
     <None Remove="App_Data\Reports\Sales Order Detail.rdl" />
     <None Remove="App_Data\Reports\Sales_by_Region.rdl" />
     <None Remove="App_Data\Reports\Store_Contacts.rdl" />
+    <None Remove="App_Data\Resources\ok.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +69,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\DataSets\SalesEmployees.rsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Resources\ok.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
